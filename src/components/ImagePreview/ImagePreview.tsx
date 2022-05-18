@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
+import React, {useCallback, useLayoutEffect, useRef, useState} from 'react';
 import style from './ImagePreview.module.scss';
 import LabelContainer from "../LabelContainer";
 
@@ -10,7 +10,6 @@ export const ImagePreview: React.FC<{src: string}> = ({src}) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const [size, setSize] = useState<imagePreviewSizeType>({width: 0, height: 0, left: 0, top: 0});
     const [firstBoxSize, setFirstBoxSize] = useState({firstWidth: 0, firstHeight: 0});
-    const [delta, setDelta] = useState<deltaState>({deltaX: 0, deltaY: 0});
 
     const containerCalculate = useCallback((node?: HTMLDivElement | null) => {
         if (node) {
@@ -37,18 +36,12 @@ export const ImagePreview: React.FC<{src: string}> = ({src}) => {
         return () => window.removeEventListener('resize', resizeHandler)
     }, [resizeHandler])
 
-    useEffect(() => {
-        if(firstBoxSize.firstWidth || firstBoxSize.firstHeight) {
-            const deltaX = firstBoxSize.firstWidth - size.width;
-            const deltaY = firstBoxSize.firstHeight - size.height;
-            setDelta({deltaY, deltaX})
-
-        }
-    }, [firstBoxSize, size])
 
 
-    return (src ? <div className={style.wrapper} ref={containerCalculate}>
-        <img src={src} alt={'downloaded-img'} className={style.image}/>
-        <LabelContainer parentSize={size} delta={delta} />
+    return (src ? <div className={style.wrapper} ref={containerCalculate}
+    >
+        <img src={src} alt={'downloaded-img'}
+             className={style.image}/>
+        <LabelContainer parentSize={size}  />
             </div> : <span>Изображение не загружено</span>)
 }

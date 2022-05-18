@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import style from './CreateLabel.module.scss';
 import {labelListType} from "../LabelContainer";
 import {generateUniqueID} from "web-vitals/dist/modules/lib/generateUniqueID";
-import {deltaState} from "../../ImagePreview/ImagePreview";
 
 export const CreateLabel: React.FC<{top: number, left: number,
     onLabelCreateCallback: (arg: labelListType) => void}> =
@@ -21,7 +20,7 @@ export const CreateLabel: React.FC<{top: number, left: number,
         onLabelCreateCallback(newLabel)
     }
 
-    return <div className={style.label} style={{top: `${top}px`, left: `${left}px`}}>
+    return <div className={style.label} style={{top: `${top}%`, left: `${left}%`}}>
         <input value={labelText} onChange={(e) => setLabelText(e.target.value)} type={'text'}/>
         <button onClick={onLabelCreate}>Добавить метку</button>
     </div>
