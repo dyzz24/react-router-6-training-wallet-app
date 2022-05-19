@@ -16,6 +16,9 @@ export const LabelContainer: React.FC<{parentSize: imagePreviewSizeType}>  =
     const onOpenLabelCreate = (e:React.MouseEvent<HTMLDivElement>) => {
         const target = e.target as HTMLDivElement;
         if(target.className === style.wrapper) {
+
+             // координаты клика перевожу в проценты относительно родителя
+
             setCoords({
                 top: ((e.clientY - parentSize.top) * 100) / parentSize.height,
                 left: ((e.clientX - parentSize.left) * 100) / parentSize.width
@@ -29,7 +32,6 @@ export const LabelContainer: React.FC<{parentSize: imagePreviewSizeType}>  =
         setLabelList([...labelList, label])
         setCoords({top: 0, left: 0});
         setOpenLabelCreation(false);
-
     }
 
     return <div className={style.wrapper} onClick={onOpenLabelCreate} >

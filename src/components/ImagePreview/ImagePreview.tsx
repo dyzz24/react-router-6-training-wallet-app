@@ -9,7 +9,6 @@ export const ImagePreview: React.FC<{src: string}> = ({src}) => {
 
     const containerRef = useRef<HTMLDivElement | null>(null);
     const [size, setSize] = useState<imagePreviewSizeType>({width: 0, height: 0, left: 0, top: 0});
-    const [firstBoxSize, setFirstBoxSize] = useState({firstWidth: 0, firstHeight: 0});
 
     const containerCalculate = useCallback((node?: HTMLDivElement | null) => {
         if (node) {
@@ -19,15 +18,16 @@ export const ImagePreview: React.FC<{src: string}> = ({src}) => {
                 left: node.getBoundingClientRect().left,
                 top: node.getBoundingClientRect().top
             });
+            // Нода нужна в дальнейшем при калькуляции размеров при ресайзе
             containerRef.current = node;
-            if(!firstBoxSize.firstWidth || !firstBoxSize.firstHeight) {
-                setFirstBoxSize({firstWidth: node.getBoundingClientRect().width,
-                    firstHeight: node.getBoundingClientRect().height})
-            }
         }
-    }, [firstBoxSize.firstWidth, firstBoxSize.firstHeight]);
+    }, []);
 
     const resizeHandler = useCallback(() => {
+        // INFO!!
+        // Так как я высчитываю координаты меток в процентах относительно парента
+        // При ресайзе и изменении его резиновых размеров я храню его размеры в стэйте
+        // LabelContainer ложится поверх изображения
             containerCalculate(containerRef.current)
     }, [containerCalculate])
 
@@ -40,8 +40,8 @@ export const ImagePreview: React.FC<{src: string}> = ({src}) => {
 
     return (src ? <div className={style.wrapper} ref={containerCalculate}
     >
+        <LabelContainer parentSize={size}  />
         <img src={src} alt={'downloaded-img'}
              className={style.image}/>
-        <LabelContainer parentSize={size}  />
             </div> : <span>Изображение не загружено</span>)
 }
