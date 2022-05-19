@@ -1,1 +1,1 @@
-export {UploadImageFileInput as default} from './UploadImageFileInput';
+export { UploadImageFileInput as default } from './UploadImageFileInput';

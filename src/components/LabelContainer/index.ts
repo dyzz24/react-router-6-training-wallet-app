@@ -1,1 +1,1 @@
-export {LabelContainer as default} from './LabelContainer';
+export { LabelContainer as default } from './LabelContainer';
