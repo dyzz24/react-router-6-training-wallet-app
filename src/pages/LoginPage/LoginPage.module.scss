@@ -1,0 +1,28 @@
+.wrapper {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button {
+  height: 40px;
+  padding: 0 12px;
+  justify-content: center;
+  user-select: none;
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  text-align: center;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: #467AB4;
+  transition: background-color .15s;
+  cursor: pointer;
+  background-color: #C9CBCD;
+
+  &:hover {
+    background-color: #53b374;
+  }
+}

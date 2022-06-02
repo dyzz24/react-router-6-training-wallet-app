@@ -1,0 +1,44 @@
+.tableWrapper {
+  display: flex;
+  flex-direction: column;
+
+}
+.tableRow {
+  display: grid;
+  width: 100%;
+  padding: 12px 24px;
+  box-sizing: border-box;
+
+  grid-template-columns: repeat(7, 1fr);
+  align-items: center;
+  min-height: 70px;
+  font-size: 16px;
+  color: #53b374;
+  grid-gap: 0 12px;
+  transition: background-color .4s;
+
+  &.title {
+    background-color: #edeeee;
+    font-weight: bold;
+  }
+
+  &.content {
+    border-bottom: 1px dashed #C9CBCD;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba(115, 116, 118, 0.3);
+    }
+  }
+}
+
+.inputWrapper {
+  margin: 12px 0;
+}
+
+.notFound {
+  font-weight: bold;
+  margin: 12px;
+}
+
+
