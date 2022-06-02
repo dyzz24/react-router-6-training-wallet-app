@@ -14,6 +14,7 @@ import { SearchInput } from '../SearchInput/SearchInput';
 import style from './TransactionsList.module.scss';
 import { emulateDelay } from '../../api/methods';
 import LinkButton from '../../UI/LinkButton';
+import { amountHelper } from '../../helpers/amount-helper';
 
 const SEARCH_KEY = 'search';
 
@@ -126,10 +127,7 @@ export const TransactionsList = () => {
               />
 
               <span>
-                {new Intl.NumberFormat('de-DE', {
-                  style: 'currency',
-                  currency: transaction.currency,
-                }).format(transaction.amount)}
+                {amountHelper(transaction.amount, transaction.currency)}
               </span>
               <span style={{ color: CurrencyColors[transaction.currency] }}>
                 {transaction.currency}

@@ -17,11 +17,11 @@ function App() {
         <Route path="home">
           <Route path="transactions">
             <Route path={''} element={<TransactionsList />} />
-            <Route path={':Id'} element={<Transaction />} />
+            <Route path={':id'} element={<Transaction />} />
           </Route>
           <Route path="cards">
             <Route path={''} element={<CardList />} />
-            <Route path={':Id'} element={<Card />} />
+            <Route path={':id'} element={<Card />} />
           </Route>
         </Route>
       </Routes>

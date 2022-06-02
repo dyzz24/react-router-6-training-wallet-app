@@ -1,2 +1,18 @@
 .wrapper {
+  display: grid;
+  padding: 24px;
+  box-sizing: border-box;
+  grid-template-columns: max-content 1fr;
+  grid-gap: 10px;
+  align-items: center;
+}
+
+.description {
+  color: #737476;
+  font-size: 14px;
+}
+
+.value {
+  color: #ff6a59;
+  font-size: 16px;
 }
