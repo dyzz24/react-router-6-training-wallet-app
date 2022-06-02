@@ -1,8 +1,8 @@
 .tableWrapper {
   display: flex;
   flex-direction: column;
-
 }
+
 .tableRow {
   display: grid;
   width: 100%;
@@ -13,7 +13,7 @@
   align-items: center;
   min-height: 70px;
   font-size: 16px;
-  color: #53b374;
+  color: #737476;
   grid-gap: 0 12px;
   transition: background-color .4s;
 
@@ -24,21 +24,41 @@
 
   &.content {
     border-bottom: 1px dashed #C9CBCD;
-    cursor: pointer;
-
-    &:hover {
-      background-color: rgba(115, 116, 118, 0.3);
-    }
   }
 }
 
 .inputWrapper {
-  margin: 12px 0;
+  margin: 12px;
 }
 
 .notFound {
   font-weight: bold;
   margin: 12px;
+}
+
+.contentWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  &.loading {
+    background-color: #383a3a;
+    opacity: .5;
+  }
+}
+
+.loadingTitle {
+  text-transform: uppercase;
+  position: absolute;
+  font-weight: bolder;
+  font-size: 42px;
+  color: #ff6a59;
+}
+
+.goCardLink {
+  margin: 8px;
 }
 
 

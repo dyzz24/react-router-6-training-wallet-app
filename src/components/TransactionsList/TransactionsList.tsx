@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { debounce } from 'lodash';
 import { useCallback } from 'react';
 import clsx from 'clsx';
@@ -12,27 +12,36 @@ import { CurrencyColors } from '../../types/enums';
 import { SearchInput } from '../SearchInput/SearchInput';
 
 import style from './TransactionsList.module.scss';
+import { emulateDelay } from '../../api/methods';
+import LinkButton from '../../UI/LinkButton';
+
+const SEARCH_KEY = 'search';
 
 export const TransactionsList = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  let [searchParams, setSearchParams] = useSearchParams();
   const { inputValue, setInputValue } = useInputValue();
   const [transactionsState, setTransactionsState] =
     useState<TransactionType[]>(transactions);
 
-  const filterTransactions = (filter: string) => {
-    if (filter) {
-      const filteredArr = transactions.filter(
-        (transaction) =>
-          String(transaction.cardID).includes(filter) ||
-          String(transaction.cardAccount).includes(filter) ||
-          String(transaction.amount).includes(filter) ||
-          transaction.currency.includes(filter) ||
-          getFullDate(transaction.transactionDate).includes(filter) ||
-          transaction.merchantInfo.includes(filter),
-      );
-      setTransactionsState(filteredArr);
-    } else setTransactionsState(transactions);
+  const [loading, setLoading] = useState(false);
+
+  const filterTransactions = async (filter: string) => {
+    setLoading(true);
+    await emulateDelay(1000);
+    const filteredArr = transactions.filter(
+      (transaction) =>
+        String(transaction.cardID).includes(filter) ||
+        String(transaction.cardAccount).includes(filter) ||
+        String(transaction.amount).includes(filter) ||
+        transaction.currency.includes(filter) ||
+        getFullDate(transaction.transactionDate).includes(filter) ||
+        transaction.merchantInfo.includes(filter),
+    );
+    setTransactionsState(filteredArr);
+
+    setLoading(false);
   };
 
   const debouncedChangeHandler = useCallback(
@@ -40,11 +49,37 @@ export const TransactionsList = () => {
     [],
   );
 
-  const linkClickHandler = (id: number) => navigate(`${pathname}/${id}`);
+  const cardLinkHandler = useCallback(
+    (id: number) => () => navigate(`/home/cards/${id}`),
+    [navigate],
+  );
+
+  const transactionLinkHandler = useCallback(
+    (id: number) => () => navigate(`${pathname}/${id}`),
+    [navigate, pathname],
+  );
+
+  const goToCardList = useCallback(() => navigate('/home/cards'), [navigate]);
 
   useEffect(() => {
-    debouncedChangeHandler(inputValue);
+    // dont use hook when INPUT has initial value
+    if (typeof inputValue === 'object') return;
+    if (inputValue) {
+      setSearchParams({ [SEARCH_KEY]: inputValue });
+    } else {
+      setSearchParams({});
+    }
   }, [inputValue]);
+
+  useEffect(() => {
+    // console.log(searchParams.get(SEARCH_KEY));
+    if (searchParams.get(SEARCH_KEY)) {
+      debouncedChangeHandler(searchParams.get(SEARCH_KEY));
+      setInputValue(searchParams.get(SEARCH_KEY) as string);
+    } else {
+      setTransactionsState(transactions);
+    }
+  }, [searchParams]);
 
   return (
     <div className={style.tableWrapper}>
@@ -57,6 +92,11 @@ export const TransactionsList = () => {
           setInputValue={setInputValue}
         />
       </div>
+      <LinkButton
+        callback={goToCardList}
+        text={'TO TO CARD LIST'}
+        additionClassName={style.goCardLink}
+      />
       <div className={clsx(style.tableRow, style.title)}>
         <span>Transaction ID</span>
         <span>Card Account</span>
@@ -65,34 +105,43 @@ export const TransactionsList = () => {
         <span>Currency</span>
         <span>Transaction Date</span>
         <span>Merchant Info</span>
-        {/*<Link to={`${pathname}/12`}>Link to 12</Link>*/}
       </div>
-      {transactionsState.length ? (
-        transactionsState.map((transaction) => (
-          <div
-            className={clsx(style.tableRow, style.content)}
-            key={transaction.transactionID}
-            onClick={() => linkClickHandler(transaction.transactionID)}
-          >
-            <span>{transaction.transactionID}</span>
-            <span>{transaction.cardAccount}</span>
-            <span>{transaction.cardID}</span>
-            <span>
-              {new Intl.NumberFormat('de-DE', {
-                style: 'currency',
-                currency: transaction.currency,
-              }).format(transaction.amount)}
-            </span>
-            <span style={{ color: CurrencyColors[transaction.currency] }}>
-              {transaction.currency}
-            </span>
-            <span>{getFullDate(transaction.transactionDate)}</span>
-            <span>{transaction.merchantInfo}</span>
-          </div>
-        ))
-      ) : (
-        <span className={style.notFound}>Transactions not found</span>
-      )}
+      <div className={clsx(style.contentWrapper, loading && style.loading)}>
+        {loading && <span className={style.loadingTitle}>loading</span>}
+        {transactionsState.length ? (
+          transactionsState.map((transaction) => (
+            <div
+              className={clsx(style.tableRow, style.content)}
+              key={transaction.transactionID}
+            >
+              <LinkButton
+                callback={transactionLinkHandler(transaction.transactionID)}
+                text={`${transaction.transactionID} (link`}
+              />
+
+              <span>{transaction.cardAccount}</span>
+              <LinkButton
+                callback={cardLinkHandler(transaction.cardID)}
+                text={`${transaction.cardID} (link)`}
+              />
+
+              <span>
+                {new Intl.NumberFormat('de-DE', {
+                  style: 'currency',
+                  currency: transaction.currency,
+                }).format(transaction.amount)}
+              </span>
+              <span style={{ color: CurrencyColors[transaction.currency] }}>
+                {transaction.currency}
+              </span>
+              <span>{getFullDate(transaction.transactionDate)}</span>
+              <span>{transaction.merchantInfo}</span>
+            </div>
+          ))
+        ) : (
+          <span className={style.notFound}>Transactions not found</span>
+        )}
+      </div>
     </div>
   );
 };

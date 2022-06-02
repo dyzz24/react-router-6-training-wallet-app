@@ -3,7 +3,7 @@ import style from './SearchInput.module.scss';
 
 type Props = {
   setInputValue: (arg: string) => void;
-  inputValue: string;
+  inputValue: string | null;
   placeholder?: string;
 };
 export const SearchInput: React.FC<Props> = ({
@@ -15,7 +15,7 @@ export const SearchInput: React.FC<Props> = ({
     <input
       placeholder={placeholder}
       className={style.input}
-      value={inputValue}
+      value={inputValue || ''}
       onChange={(e) => setInputValue(e.target.value)}
     />
   );
