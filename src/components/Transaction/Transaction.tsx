@@ -5,7 +5,8 @@ import { transactions } from '../../data/transactions';
 
 import style from './Transaction.module.scss';
 import LinkButton from '../../UI/LinkButton';
-import { amountHelper } from '../../helpers/amount-helper';
+import { getFullDate } from '../../helpers/date-helpers';
+import { amountParser } from '../../helpers/amount-helper';
 
 export const Transaction = () => {
   const params = useParams();
@@ -29,7 +30,7 @@ export const Transaction = () => {
   }, [params.id]);
 
   if (!transactionState) return null;
-  console.log(params);
+
   return (
     <div className={style.wrapper}>
       <span className={style.description}>Current transaction ID: </span>
@@ -41,9 +42,15 @@ export const Transaction = () => {
         callback={cardLinkHandler(transactionState.cardID)}
         text={`Open Card from here`}
       />
+      <span className={style.description}>Merchant Info</span>
+      <span className={style.value}>{transactionState.merchantInfo}</span>
       <span className={style.description}>Current amount: </span>
       <span className={style.description}>
-        {amountHelper(transactionState.amount, transactionState.currency)}
+        {amountParser(transactionState.amount, transactionState.currency)}
+      </span>
+      <span className={style.description}>Date: </span>
+      <span className={style.description}>
+        {getFullDate(transactionState.transactionDate)}
       </span>
     </div>
   );

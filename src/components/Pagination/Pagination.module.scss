@@ -1,0 +1,24 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  margin: 12px;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ff6a59;
+  border-radius: 4px;
+  box-sizing: border-box;
+  padding: 6px;
+  margin-left: 10px;
+  border: 1px solid #53b374;
+  min-width: 40px;
+  cursor: pointer;
+}
+
+.active {
+  background-color: #ff6a59;
+  color: black;
+}

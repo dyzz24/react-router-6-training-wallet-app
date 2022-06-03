@@ -9,7 +9,7 @@ export const transactions: TransactionType[] = [
     amount: 240,
     currency: CurrencyEnum.EUR,
     transactionDate: '2022-05-23T09:44:05.316915+00:00',
-    merchantInfo: 'PS store',
+    merchantInfo: 'PS store transaction',
   },
   {
     transactionID: 2,
@@ -18,7 +18,7 @@ export const transactions: TransactionType[] = [
     amount: 1400,
     currency: CurrencyEnum.EUR,
     transactionDate: '2022-02-23T09:44:05.316915+00:00',
-    merchantInfo: 'Estate',
+    merchantInfo: 'Estate food IOS 12231 2',
   },
   {
     transactionID: 3,
@@ -27,7 +27,7 @@ export const transactions: TransactionType[] = [
     amount: 17100,
     currency: CurrencyEnum.AZN,
     transactionDate: '2022-05-29T09:44:05.316915+00:00',
-    merchantInfo: 'Play Market',
+    merchantInfo: 'Play Market game of throne bla bla',
   },
   {
     transactionID: 4,
@@ -54,7 +54,7 @@ export const transactions: TransactionType[] = [
     amount: 240,
     currency: CurrencyEnum.EUR,
     transactionDate: '2022-05-23T09:44:05.316915+00:00',
-    merchantInfo: 'PS store',
+    merchantInfo: 'PS store Old game Divinity Origin Sin 2',
   },
   {
     transactionID: 7,
@@ -81,7 +81,7 @@ export const transactions: TransactionType[] = [
     amount: 3400.12,
     currency: CurrencyEnum.EUR,
     transactionDate: '2021-05-21T09:44:05.316915+00:00',
-    merchantInfo: 'Global Travel',
+    merchantInfo: 'Global Travel for TT',
   },
   {
     transactionID: 10,
@@ -108,6 +108,6 @@ export const transactions: TransactionType[] = [
     amount: 1567,
     currency: CurrencyEnum.EUR,
     transactionDate: '2022-05-21T06:44:05.316915+00:00',
-    merchantInfo: 'HoFGlobal',
+    merchantInfo: 'HoFGlobal in EUROPE',
   },
 ];

@@ -14,14 +14,15 @@ import { SearchInput } from '../SearchInput/SearchInput';
 import style from './TransactionsList.module.scss';
 import { emulateDelay } from '../../api/methods';
 import LinkButton from '../../UI/LinkButton';
-import { amountHelper } from '../../helpers/amount-helper';
+import { amountParser } from '../../helpers/amount-helper';
+import Pagination from '../Pagination';
 
 const SEARCH_KEY = 'search';
 
 export const TransactionsList = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  let [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { inputValue, setInputValue } = useInputValue();
   const [transactionsState, setTransactionsState] =
     useState<TransactionType[]>(transactions);
@@ -40,7 +41,7 @@ export const TransactionsList = () => {
         getFullDate(transaction.transactionDate).includes(filter) ||
         transaction.merchantInfo.includes(filter),
     );
-    setTransactionsState(filteredArr);
+    setTransactionsState(filteredArr.filter((_, idx) => idx < 10));
 
     setLoading(false);
   };
@@ -78,9 +79,11 @@ export const TransactionsList = () => {
       debouncedChangeHandler(searchParams.get(SEARCH_KEY));
       setInputValue(searchParams.get(SEARCH_KEY) as string);
     } else {
-      setTransactionsState(transactions);
+      setTransactionsState(transactions.filter((_, idx) => idx < 10));
     }
   }, [searchParams]);
+
+  useEffect(() => {}, []);
 
   return (
     <div className={style.tableWrapper}>
@@ -98,6 +101,8 @@ export const TransactionsList = () => {
         text={'TO TO CARD LIST'}
         additionClassName={style.goCardLink}
       />
+      <Pagination totalItemsCount={transactions.length} limit={10} />
+
       <div className={clsx(style.tableRow, style.title)}>
         <span>Transaction ID</span>
         <span>Card Account</span>
@@ -127,7 +132,7 @@ export const TransactionsList = () => {
               />
 
               <span>
-                {amountHelper(transaction.amount, transaction.currency)}
+                {amountParser(transaction.amount, transaction.currency)}
               </span>
               <span style={{ color: CurrencyColors[transaction.currency] }}>
                 {transaction.currency}
