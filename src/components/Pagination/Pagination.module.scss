@@ -22,3 +22,8 @@
   background-color: #ff6a59;
   color: black;
 }
+
+.disable {
+  pointer-events: none;
+  opacity: .4;
+}

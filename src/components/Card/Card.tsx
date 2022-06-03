@@ -1,6 +1,12 @@
 import React from 'react';
 import style from './Card.module.scss';
+import { BreadCrumbs } from '../../UI/BreadCrumbs/BreadCrumbs';
 
 export const Card = () => {
-  return <div>i am a card</div>;
+  return (
+    <div>
+      {' '}
+      <BreadCrumbs />
+    </div>
+  );
 };

@@ -116,6 +116,7 @@ export const TransactionsList = () => {
         additionClassName={style.goCardLink}
       />
       <Pagination
+        blockPagination={!!searchParams.get(SEARCH_KEY)}
         totalItemsCount={transactions.length}
         limit={LIMIT}
         setPageCallback={onPaginationCallback}

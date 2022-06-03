@@ -7,11 +7,13 @@ type Props = {
   setPageCallback: (arg: number) => void;
   totalItemsCount: number;
   limit: number;
+  blockPagination?: boolean;
 };
 export const Pagination: React.FC<Props> = ({
   setPageCallback,
   totalItemsCount,
   limit,
+  blockPagination,
 }) => {
   const [page, setPage] = useState(0);
   const buttons = Math.ceil(totalItemsCount / limit);
@@ -23,7 +25,7 @@ export const Pagination: React.FC<Props> = ({
   };
 
   return (
-    <div className={style.wrapper}>
+    <div className={clsx(style.wrapper, blockPagination && style.disable)}>
       <span>Pagination</span>
       {filledArr.map((_, idx) => (
         <div
