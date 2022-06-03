@@ -1,3 +1,8 @@
+Simple train project with using of CRA + React-router v6, through the
+navigation (transaction -> card detail, card detail -> transaction with filters)
+React/TS/RR6
+Design is not my main achievement :)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
