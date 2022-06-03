@@ -73,7 +73,7 @@ export const Filter: React.FC<{ type: 'transaction' | 'cards' }> = ({
           }))
         }
       >
-        <option value="" selected disabled hidden>
+        <option value="" disabled hidden>
           Choose here
         </option>
         {Object.values(
