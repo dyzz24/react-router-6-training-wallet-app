@@ -4,7 +4,7 @@ import style from './Pagination.module.scss';
 import clsx from 'clsx';
 
 type Props = {
-  setPageCallback?: () => void;
+  setPageCallback: (arg: number) => void;
   totalItemsCount: number;
   limit: number;
 };
@@ -14,10 +14,11 @@ export const Pagination: React.FC<Props> = ({
   limit,
 }) => {
   const [page, setPage] = useState(0);
-  const buttons = Math.round(totalItemsCount % limit);
+  const buttons = Math.ceil(totalItemsCount / limit);
   const filledArr = new Array(buttons).fill(null);
 
   const paginationHandler = (pageCount: number) => {
+    setPageCallback(pageCount);
     setPage(pageCount);
   };
 

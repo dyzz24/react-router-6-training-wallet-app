@@ -7,6 +7,7 @@ import style from './Transaction.module.scss';
 import LinkButton from '../../UI/LinkButton';
 import { getFullDate } from '../../helpers/date-helpers';
 import { amountParser } from '../../helpers/amount-helper';
+import { BreadCrumbs } from '../../UI/BreadCrumbs/BreadCrumbs';
 
 export const Transaction = () => {
   const params = useParams();
@@ -32,26 +33,29 @@ export const Transaction = () => {
   if (!transactionState) return null;
 
   return (
-    <div className={style.wrapper}>
-      <span className={style.description}>Current transaction ID: </span>
-      <span className={style.value}>{transactionState.transactionID}</span>
-      <span className={style.description}>Current Card Account: </span>
-      <span className={style.value}>{transactionState.cardAccount}</span>
-      <span className={style.description}>Current Card ID: </span>
-      <LinkButton
-        callback={cardLinkHandler(transactionState.cardID)}
-        text={`Open Card from here`}
-      />
-      <span className={style.description}>Merchant Info</span>
-      <span className={style.value}>{transactionState.merchantInfo}</span>
-      <span className={style.description}>Current amount: </span>
-      <span className={style.description}>
-        {amountParser(transactionState.amount, transactionState.currency)}
-      </span>
-      <span className={style.description}>Date: </span>
-      <span className={style.description}>
-        {getFullDate(transactionState.transactionDate)}
-      </span>
-    </div>
+    <>
+      <BreadCrumbs />
+      <div className={style.wrapper}>
+        <span className={style.description}>Current transaction ID: </span>
+        <span className={style.value}>{transactionState.transactionID}</span>
+        <span className={style.description}>Current Card Account: </span>
+        <span className={style.value}>{transactionState.cardAccount}</span>
+        <span className={style.description}>Current Card ID: </span>
+        <LinkButton
+          callback={cardLinkHandler(transactionState.cardID)}
+          text={`Open Card from here`}
+        />
+        <span className={style.description}>Merchant Info</span>
+        <span className={style.value}>{transactionState.merchantInfo}</span>
+        <span className={style.description}>Current amount: </span>
+        <span className={style.description}>
+          {amountParser(transactionState.amount, transactionState.currency)}
+        </span>
+        <span className={style.description}>Date: </span>
+        <span className={style.description}>
+          {getFullDate(transactionState.transactionDate)}
+        </span>
+      </div>
+    </>
   );
 };

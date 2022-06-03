@@ -8,7 +8,7 @@
 
 .button {
   height: 40px;
-  padding: 0 12px;
+  padding: 8px 12px;
   justify-content: center;
   user-select: none;
   display: inline-flex;
@@ -17,12 +17,14 @@
   text-align: center;
   border: 1px solid transparent;
   border-radius: 5px;
-  color: #467AB4;
+  color: white;
   transition: background-color .15s;
   cursor: pointer;
-  background-color: #C9CBCD;
+  background-color: #53b374;
+  font-weight: bolder;
+  font-size: 18px;
 
   &:hover {
-    background-color: #53b374;
+    background-color: #ff6a59;
   }
 }

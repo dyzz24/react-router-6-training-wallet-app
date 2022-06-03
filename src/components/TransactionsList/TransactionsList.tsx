@@ -18,6 +18,7 @@ import { amountParser } from '../../helpers/amount-helper';
 import Pagination from '../Pagination';
 
 const SEARCH_KEY = 'search';
+const LIMIT = 10;
 
 export const TransactionsList = () => {
   const { pathname } = useLocation();
@@ -32,20 +33,23 @@ export const TransactionsList = () => {
   const filterTransactions = async (filter: string) => {
     setLoading(true);
     await emulateDelay(1000);
+    const toLowerCaseFilter = filter.toLowerCase();
     const filteredArr = transactions.filter(
       (transaction) =>
-        String(transaction.cardID).includes(filter) ||
-        String(transaction.cardAccount).includes(filter) ||
-        String(transaction.amount).includes(filter) ||
-        transaction.currency.includes(filter) ||
-        getFullDate(transaction.transactionDate).includes(filter) ||
-        transaction.merchantInfo.includes(filter),
+        String(transaction.cardID).toLowerCase().includes(toLowerCaseFilter) ||
+        String(transaction.cardAccount)
+          .toLowerCase()
+          .includes(toLowerCaseFilter) ||
+        String(transaction.amount).toLowerCase().includes(toLowerCaseFilter) ||
+        transaction.currency.toLowerCase().includes(toLowerCaseFilter) ||
+        getFullDate(transaction.transactionDate).includes(toLowerCaseFilter) ||
+        transaction.merchantInfo.toLowerCase().includes(toLowerCaseFilter),
     );
     setTransactionsState(filteredArr.filter((_, idx) => idx < 10));
-
     setLoading(false);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedChangeHandler = useCallback(
     debounce((value) => filterTransactions(value), 200),
     [],
@@ -71,19 +75,29 @@ export const TransactionsList = () => {
     } else {
       setSearchParams({});
     }
-  }, [inputValue]);
+  }, [inputValue, setSearchParams]);
 
   useEffect(() => {
-    // console.log(searchParams.get(SEARCH_KEY));
     if (searchParams.get(SEARCH_KEY)) {
       debouncedChangeHandler(searchParams.get(SEARCH_KEY));
       setInputValue(searchParams.get(SEARCH_KEY) as string);
     } else {
       setTransactionsState(transactions.filter((_, idx) => idx < 10));
     }
-  }, [searchParams]);
+  }, [debouncedChangeHandler, searchParams, setInputValue]);
 
-  useEffect(() => {}, []);
+  const onPaginationCallback = useCallback(
+    (page: number) => {
+      setSearchParams({});
+      setInputValue('');
+      setTransactionsState(
+        transactions.filter(
+          (_, idx) => idx >= page * LIMIT && idx < page * LIMIT + LIMIT,
+        ),
+      );
+    },
+    [setInputValue, setSearchParams],
+  );
 
   return (
     <div className={style.tableWrapper}>
@@ -101,7 +115,11 @@ export const TransactionsList = () => {
         text={'TO TO CARD LIST'}
         additionClassName={style.goCardLink}
       />
-      <Pagination totalItemsCount={transactions.length} limit={10} />
+      <Pagination
+        totalItemsCount={transactions.length}
+        limit={LIMIT}
+        setPageCallback={onPaginationCallback}
+      />
 
       <div className={clsx(style.tableRow, style.title)}>
         <span>Transaction ID</span>

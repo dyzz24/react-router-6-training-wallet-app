@@ -18,6 +18,7 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': ['error'],
     'no-shadow': 'off',
     '@typescript-eslint/no-shadow': ['error'],
+    'react-hooks/exhaustive-deps': 'error',
   },
   overrides: [
     {
