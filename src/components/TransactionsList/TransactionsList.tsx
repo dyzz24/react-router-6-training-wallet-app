@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import clsx from 'clsx';
 import { TransactionType } from '../../types/schemas';
 
@@ -21,7 +21,6 @@ import { Filter, filterTypeObj } from '../Filter/Filter';
 const LIMIT = 10;
 
 export const TransactionsList = () => {
-  const { pathname } = useLocation();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -72,8 +71,8 @@ export const TransactionsList = () => {
   );
 
   const transactionLinkHandler = useCallback(
-    (id: number) => () => navigate(`${pathname}/${id}`),
-    [navigate, pathname],
+    (id: number) => () => navigate(`/home/transactions/${id}`),
+    [navigate],
   );
 
   const goToCardList = useCallback(() => navigate('/home/cards'), [navigate]);
@@ -134,7 +133,7 @@ export const TransactionsList = () => {
             >
               <LinkButton
                 callback={transactionLinkHandler(transaction.transactionID)}
-                text={`${transaction.transactionID} (link`}
+                text={`${transaction.transactionID} (link)`}
               />
 
               <span>{transaction.cardAccount}</span>
