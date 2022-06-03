@@ -14,3 +14,13 @@ export const CurrencyColors = {
   [CurrencyEnum.EUR]: '#ff6a59',
   [CurrencyEnum.USD]: '#8174E0',
 };
+
+export enum FilterFields {
+  TRANSACTION_ID = 'transactionID',
+  CARD_ACCOUNT = 'cardAccount',
+  CARD_ID = 'cardID',
+  AMOUNT = 'amount',
+  CURRENCY = 'currency',
+  TRANSACTION_DATE = 'transactionDate',
+  MERCHANT_INFO = 'merchantInfo',
+}

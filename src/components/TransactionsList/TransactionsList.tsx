@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { debounce } from 'lodash';
-import { useCallback } from 'react';
 import clsx from 'clsx';
-import { useInputValue } from '../../hooks/useInputValue';
 import { TransactionType } from '../../types/schemas';
 
 import { transactions } from '../../data/transactions';
 import { getFullDate } from '../../helpers/date-helpers';
-import { CurrencyColors } from '../../types/enums';
+import { CurrencyColors, FilterFields } from '../../types/enums';
 import { SearchInput } from '../SearchInput/SearchInput';
 
 import style from './TransactionsList.module.scss';
@@ -20,31 +18,55 @@ import Pagination from '../Pagination';
 const SEARCH_KEY = 'search';
 const LIMIT = 10;
 
+type filterTypeObj = {
+  filterType: FilterFields | string;
+  value: string;
+};
+
 export const TransactionsList = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { inputValue, setInputValue } = useInputValue();
+  const [filterState, setFilterState] = useState<filterTypeObj>({
+    filterType: '',
+    value: '',
+  });
   const [transactionsState, setTransactionsState] =
     useState<TransactionType[]>(transactions);
 
+  console.log(filterState);
+
   const [loading, setLoading] = useState(false);
 
-  const filterTransactions = async (filter: string) => {
+  const filterTransactions = async (filter: filterTypeObj) => {
     setLoading(true);
     await emulateDelay(1000);
-    const toLowerCaseFilter = filter.toLowerCase();
-    const filteredArr = transactions.filter(
-      (transaction) =>
-        String(transaction.cardID).toLowerCase().includes(toLowerCaseFilter) ||
-        String(transaction.cardAccount)
-          .toLowerCase()
-          .includes(toLowerCaseFilter) ||
-        String(transaction.amount).toLowerCase().includes(toLowerCaseFilter) ||
-        transaction.currency.toLowerCase().includes(toLowerCaseFilter) ||
-        getFullDate(transaction.transactionDate).includes(toLowerCaseFilter) ||
-        transaction.merchantInfo.toLowerCase().includes(toLowerCaseFilter),
-    );
+    const filteredArr = transactions.filter((transaction) => {
+      switch (filter.filterType) {
+        case FilterFields.CARD_ID:
+          return String(transaction.cardID)
+            .toLowerCase()
+            .includes(filter.value);
+        case FilterFields.AMOUNT:
+          return String(transaction.amount)
+            .toLowerCase()
+            .includes(filter.value);
+        case FilterFields.CARD_ACCOUNT:
+          return String(transaction.cardAccount)
+            .toLowerCase()
+            .includes(filter.value);
+        case FilterFields.CURRENCY:
+          return transaction.currency.toLowerCase().includes(filter.value);
+        case FilterFields.MERCHANT_INFO:
+          return transaction.merchantInfo.toLowerCase().includes(filter.value);
+        case FilterFields.TRANSACTION_DATE:
+          return getFullDate(transaction.transactionDate).includes(
+            filter.value,
+          );
+        case FilterFields.TRANSACTION_ID:
+          return String(transaction.transactionID).includes(filter.value);
+      }
+    });
     setTransactionsState(filteredArr.filter((_, idx) => idx < 10));
     setLoading(false);
   };
@@ -68,55 +90,94 @@ export const TransactionsList = () => {
   const goToCardList = useCallback(() => navigate('/home/cards'), [navigate]);
 
   useEffect(() => {
-    // dont use hook when INPUT has initial value
-    if (typeof inputValue === 'object') return;
-    if (inputValue) {
-      setSearchParams({ [SEARCH_KEY]: inputValue });
-    } else {
-      setSearchParams({});
-    }
-  }, [inputValue, setSearchParams]);
-
-  useEffect(() => {
-    if (searchParams.get(SEARCH_KEY)) {
-      debouncedChangeHandler(searchParams.get(SEARCH_KEY));
-      setInputValue(searchParams.get(SEARCH_KEY) as string);
+    const filterType = searchParams.get('filterType') as string;
+    const filterValue = searchParams.get('value') as string;
+    if (filterType && filterValue) {
+      filterTransactions({ filterType, value: filterValue }).then();
+      setFilterState({ filterType, value: filterValue });
     } else {
       setTransactionsState(transactions.filter((_, idx) => idx < 10));
     }
-  }, [debouncedChangeHandler, searchParams, setInputValue]);
+  }, [searchParams]);
 
   const onPaginationCallback = useCallback(
     (page: number) => {
       setSearchParams({});
-      setInputValue('');
       setTransactionsState(
         transactions.filter(
           (_, idx) => idx >= page * LIMIT && idx < page * LIMIT + LIMIT,
         ),
       );
     },
-    [setInputValue, setSearchParams],
+    [setSearchParams],
   );
+
+  const applyFilter = () => {
+    if (filterState.filterType && filterState.value) {
+      setSearchParams({
+        filterType: filterState.filterType,
+        value: filterState.value,
+      });
+    }
+  };
+
+  const cancelFilter = () => {
+    setSearchParams({});
+    setFilterState({ filterType: '', value: '' });
+  };
 
   return (
     <div className={style.tableWrapper}>
       <div className={style.inputWrapper}>
         <SearchInput
-          inputValue={inputValue}
+          inputValue={filterState.value}
           placeholder={
             'Filter by cardID, cardAccount, amount, currency and date '
           }
-          setInputValue={setInputValue}
+          setInputValue={(e) =>
+            setFilterState((state) => ({ ...state, value: e.toLowerCase() }))
+          }
         />
+        <select
+          className={style.select}
+          placeholder={'Select filter field'}
+          value={filterState.filterType}
+          onChange={(e) =>
+            setFilterState((prevState) => ({
+              ...prevState,
+              filterType: e.target.value,
+            }))
+          }
+        >
+          <option value="" selected disabled hidden>
+            Choose here
+          </option>
+          {Object.values(FilterFields).map((filterValue) => (
+            <option key={filterValue}>{filterValue}</option>
+          ))}
+        </select>
+        <button
+          className={style.applyButton}
+          disabled={!filterState.filterType || !filterState.value}
+          onClick={applyFilter}
+        >
+          Apply
+        </button>
+        <button
+          className={style.cancelButton}
+          disabled={!filterState.filterType || !filterState.value}
+          onClick={cancelFilter}
+        >
+          Cancel Filter
+        </button>
       </div>
       <LinkButton
         callback={goToCardList}
-        text={'TO TO CARD LIST'}
+        text={'TO CARD LIST'}
         additionClassName={style.goCardLink}
       />
       <Pagination
-        blockPagination={!!searchParams.get(SEARCH_KEY)}
+        blockPagination={!!searchParams.get('filterType')}
         totalItemsCount={transactions.length}
         limit={LIMIT}
         setPageCallback={onPaginationCallback}
