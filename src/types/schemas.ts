@@ -1,7 +1,7 @@
 import { CurrencyEnum, StatusEnum } from './enums';
 
 export type CardType = {
-  cardId: number;
+  cardID: number;
   cardAccount: number;
   maskedCardNumber: string;
   expireDate: string;

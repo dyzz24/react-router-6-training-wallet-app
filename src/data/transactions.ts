@@ -95,7 +95,7 @@ export const transactions: TransactionType[] = [
   {
     transactionID: 11,
     cardAccount: 1209932199124,
-    cardID: 2,
+    cardID: 6,
     amount: 2400,
     currency: CurrencyEnum.AZN,
     transactionDate: '2022-05-23T12:44:02.316915+00:00',
@@ -122,7 +122,7 @@ export const transactions: TransactionType[] = [
   {
     transactionID: 14,
     cardAccount: 1209932199123,
-    cardID: 1,
+    cardID: 5,
     amount: 240,
     currency: CurrencyEnum.EUR,
     transactionDate: '2022-05-23T09:44:05.316915+00:00',
@@ -131,7 +131,7 @@ export const transactions: TransactionType[] = [
   {
     transactionID: 15,
     cardAccount: 1209932199125,
-    cardID: 3,
+    cardID: 4,
     amount: 130000.21,
     currency: CurrencyEnum.AZN,
     transactionDate: '2022-01-23T09:44:05.316915+00:00',
@@ -158,7 +158,7 @@ export const transactions: TransactionType[] = [
   {
     transactionID: 18,
     cardAccount: 1209932199125,
-    cardID: 1,
+    cardID: 4,
     amount: 1200,
     currency: CurrencyEnum.USD,
     transactionDate: '2022-02-22T09:44:05.316915+00:00',
@@ -167,7 +167,7 @@ export const transactions: TransactionType[] = [
   {
     transactionID: 19,
     cardAccount: 1209932199124,
-    cardID: 2,
+    cardID: 6,
     amount: 2400,
     currency: CurrencyEnum.AZN,
     transactionDate: '2022-05-23T12:44:02.316915+00:00',
@@ -176,7 +176,7 @@ export const transactions: TransactionType[] = [
   {
     transactionID: 20,
     cardAccount: 1209932199123,
-    cardID: 1,
+    cardID: 4,
     amount: 1567,
     currency: CurrencyEnum.EUR,
     transactionDate: '2022-05-21T06:44:05.316915+00:00',
@@ -185,7 +185,7 @@ export const transactions: TransactionType[] = [
   {
     transactionID: 21,
     cardAccount: 1209932199123,
-    cardID: 1,
+    cardID: 5,
     amount: 1567,
     currency: CurrencyEnum.EUR,
     transactionDate: '2022-05-21T06:44:05.316915+00:00',

@@ -27,14 +27,7 @@
   }
 }
 
-.inputWrapper {
-  margin: 12px;
-  align-items: center;
-  display: grid;
-  grid-template-columns: repeat(4, max-content);
-  grid-gap: 0 12px
 
-}
 
 .notFound {
   font-weight: bold;
@@ -65,49 +58,3 @@
 .goCardLink {
   margin: 8px;
 }
-
-.applyButton {
-  height: 40px;
-  padding: 8px 12px;
-  justify-content: center;
-  user-select: none;
-  display: inline-flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  text-align: center;
-  border-radius: 5px;
-  color: white;
-  transition: background-color .15s;
-  cursor: pointer;
-  background-color: #53b374;
-  font-weight: bolder;
-  font-size: 18px;
-  outline: none;
-  border: none;
-
-  &:hover {
-    background-color: #ff6a59;
-  }
-
-  &:disabled {
-    opacity: .3;
-    cursor: not-allowed;
-    pointer-events: none;
-  }
-}
-
-.cancelButton {
-  @extend .applyButton;
-  background-color: #ff6a59;
-  &:hover {
-    background-color: #53b374;
-  }
-}
-
-.select {
-  height: 40px;
-  border: 1px solid #53b374;
-  border-radius: 4px;
-  padding: 2px 12px;
-}
-

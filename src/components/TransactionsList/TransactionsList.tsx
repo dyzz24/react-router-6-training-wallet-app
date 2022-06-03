@@ -1,81 +1,70 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { debounce } from 'lodash';
 import clsx from 'clsx';
 import { TransactionType } from '../../types/schemas';
 
 import { transactions } from '../../data/transactions';
 import { getFullDate } from '../../helpers/date-helpers';
-import { CurrencyColors, FilterFields } from '../../types/enums';
-import { SearchInput } from '../SearchInput/SearchInput';
+import {
+  CurrencyColors,
+  FilterParams,
+  TransactionFilterFields,
+} from '../../types/enums';
 
 import style from './TransactionsList.module.scss';
 import { emulateDelay } from '../../api/methods';
 import LinkButton from '../../UI/LinkButton';
 import { amountParser } from '../../helpers/amount-helper';
 import Pagination from '../Pagination';
+import { Filter, filterTypeObj } from '../Filter/Filter';
 
-const SEARCH_KEY = 'search';
 const LIMIT = 10;
-
-type filterTypeObj = {
-  filterType: FilterFields | string;
-  value: string;
-};
 
 export const TransactionsList = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [filterState, setFilterState] = useState<filterTypeObj>({
-    filterType: '',
-    value: '',
-  });
+
   const [transactionsState, setTransactionsState] =
     useState<TransactionType[]>(transactions);
-
-  console.log(filterState);
 
   const [loading, setLoading] = useState(false);
 
   const filterTransactions = async (filter: filterTypeObj) => {
     setLoading(true);
     await emulateDelay(1000);
+
     const filteredArr = transactions.filter((transaction) => {
       switch (filter.filterType) {
-        case FilterFields.CARD_ID:
+        case TransactionFilterFields.CARD_ID:
           return String(transaction.cardID)
             .toLowerCase()
             .includes(filter.value);
-        case FilterFields.AMOUNT:
+        case TransactionFilterFields.AMOUNT:
           return String(transaction.amount)
             .toLowerCase()
             .includes(filter.value);
-        case FilterFields.CARD_ACCOUNT:
+        case TransactionFilterFields.CARD_ACCOUNT:
           return String(transaction.cardAccount)
             .toLowerCase()
             .includes(filter.value);
-        case FilterFields.CURRENCY:
+        case TransactionFilterFields.CURRENCY:
           return transaction.currency.toLowerCase().includes(filter.value);
-        case FilterFields.MERCHANT_INFO:
+        case TransactionFilterFields.MERCHANT_INFO:
           return transaction.merchantInfo.toLowerCase().includes(filter.value);
-        case FilterFields.TRANSACTION_DATE:
+        case TransactionFilterFields.TRANSACTION_DATE:
           return getFullDate(transaction.transactionDate).includes(
             filter.value,
           );
-        case FilterFields.TRANSACTION_ID:
+        case TransactionFilterFields.TRANSACTION_ID:
           return String(transaction.transactionID).includes(filter.value);
+        default:
+          return true;
       }
     });
     setTransactionsState(filteredArr.filter((_, idx) => idx < 10));
     setLoading(false);
   };
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedChangeHandler = useCallback(
-    debounce((value) => filterTransactions(value), 200),
-    [],
-  );
 
   const cardLinkHandler = useCallback(
     (id: number) => () => navigate(`/home/cards/${id}`),
@@ -90,11 +79,10 @@ export const TransactionsList = () => {
   const goToCardList = useCallback(() => navigate('/home/cards'), [navigate]);
 
   useEffect(() => {
-    const filterType = searchParams.get('filterType') as string;
-    const filterValue = searchParams.get('value') as string;
+    const filterType = searchParams.get(FilterParams.FILTER_TYPE) as string;
+    const filterValue = searchParams.get(FilterParams.FILTER_VALUE) as string;
     if (filterType && filterValue) {
       filterTransactions({ filterType, value: filterValue }).then();
-      setFilterState({ filterType, value: filterValue });
     } else {
       setTransactionsState(transactions.filter((_, idx) => idx < 10));
     }
@@ -112,72 +100,16 @@ export const TransactionsList = () => {
     [setSearchParams],
   );
 
-  const applyFilter = () => {
-    if (filterState.filterType && filterState.value) {
-      setSearchParams({
-        filterType: filterState.filterType,
-        value: filterState.value,
-      });
-    }
-  };
-
-  const cancelFilter = () => {
-    setSearchParams({});
-    setFilterState({ filterType: '', value: '' });
-  };
-
   return (
     <div className={style.tableWrapper}>
-      <div className={style.inputWrapper}>
-        <SearchInput
-          inputValue={filterState.value}
-          placeholder={
-            'Filter by cardID, cardAccount, amount, currency and date '
-          }
-          setInputValue={(e) =>
-            setFilterState((state) => ({ ...state, value: e.toLowerCase() }))
-          }
-        />
-        <select
-          className={style.select}
-          placeholder={'Select filter field'}
-          value={filterState.filterType}
-          onChange={(e) =>
-            setFilterState((prevState) => ({
-              ...prevState,
-              filterType: e.target.value,
-            }))
-          }
-        >
-          <option value="" selected disabled hidden>
-            Choose here
-          </option>
-          {Object.values(FilterFields).map((filterValue) => (
-            <option key={filterValue}>{filterValue}</option>
-          ))}
-        </select>
-        <button
-          className={style.applyButton}
-          disabled={!filterState.filterType || !filterState.value}
-          onClick={applyFilter}
-        >
-          Apply
-        </button>
-        <button
-          className={style.cancelButton}
-          disabled={!filterState.filterType || !filterState.value}
-          onClick={cancelFilter}
-        >
-          Cancel Filter
-        </button>
-      </div>
+      <Filter type={'transaction'} />
       <LinkButton
         callback={goToCardList}
         text={'TO CARD LIST'}
         additionClassName={style.goCardLink}
       />
       <Pagination
-        blockPagination={!!searchParams.get('filterType')}
+        blockPagination={!!searchParams.get(FilterParams.FILTER_TYPE)}
         totalItemsCount={transactions.length}
         limit={LIMIT}
         setPageCallback={onPaginationCallback}

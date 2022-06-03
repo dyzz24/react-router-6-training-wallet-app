@@ -1,2 +1,13 @@
-.wrapper {
+.col {
+  display: flex;
+  flex-direction: column;
+}
+
+.cardWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 12px;
+  padding: 14px;
+  box-sizing: border-box;
 }

@@ -15,7 +15,7 @@ export const CurrencyColors = {
   [CurrencyEnum.USD]: '#8174E0',
 };
 
-export enum FilterFields {
+export enum TransactionFilterFields {
   TRANSACTION_ID = 'transactionID',
   CARD_ACCOUNT = 'cardAccount',
   CARD_ID = 'cardID',
@@ -23,4 +23,16 @@ export enum FilterFields {
   CURRENCY = 'currency',
   TRANSACTION_DATE = 'transactionDate',
   MERCHANT_INFO = 'merchantInfo',
+}
+
+export enum CardFilterFields {
+  CARD_ID = 'cardID',
+  CARD_ACCOUNT = 'cardAccount',
+  CURRENCY = 'currency',
+  STATUS = 'status',
+}
+
+export enum FilterParams {
+  FILTER_TYPE = 'filterType',
+  FILTER_VALUE = 'value',
 }

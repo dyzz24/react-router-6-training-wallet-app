@@ -1,4 +1,3 @@
-import { uniqueId } from 'lodash';
 import React, { useState } from 'react';
 import style from './Pagination.module.scss';
 import clsx from 'clsx';
@@ -31,7 +30,8 @@ export const Pagination: React.FC<Props> = ({
         <div
           onClick={() => paginationHandler(idx)}
           className={clsx(style.button, page === idx && style.active)}
-          key={uniqueId()}
+          // DON'T DO THAT in real life
+          key={idx}
         >
           {idx + 1}
         </div>
