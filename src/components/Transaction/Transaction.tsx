@@ -7,7 +7,6 @@ import style from './Transaction.module.scss';
 import LinkButton from '../../UI/LinkButton';
 import { getFullDate } from '../../helpers/date-helpers';
 import { amountParser } from '../../helpers/amount-helper';
-import { BreadCrumbs } from '../../UI/BreadCrumbs/BreadCrumbs';
 
 export const Transaction = () => {
   const params = useParams();
@@ -34,7 +33,6 @@ export const Transaction = () => {
 
   return (
     <>
-      <BreadCrumbs />
       <div className={style.wrapper}>
         <span className={style.description}>Current transaction ID: </span>
         <span className={style.value}>{transactionState.transactionID}</span>

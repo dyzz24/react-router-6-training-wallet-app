@@ -2,10 +2,7 @@ import React from 'react';
 import { Navigate, Route, BrowserRouter, Routes } from 'react-router-dom';
 
 import LoginPage from './pages/LoginPage';
-import TransactionsList from './components/TransactionsList';
-import Transaction from './components/Transaction';
-import CardList from './components/CardList';
-import Card from './components/Card';
+import HomePage from './pages/HomePage';
 
 function App() {
   return (
@@ -13,17 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="login" element={<LoginPage />} />
-        <Route path="home" element={<Navigate to="transactions" replace />} />
-        <Route path="home">
-          <Route path="transactions">
-            <Route path={''} element={<TransactionsList />} />
-            <Route path={':id'} element={<Transaction />} />
-          </Route>
-          <Route path="cards">
-            <Route path={''} element={<CardList />} />
-            <Route path={':id'} element={<Card />} />
-          </Route>
-        </Route>
+        <Route path="home/*" element={<HomePage />} />
       </Routes>
     </BrowserRouter>
   );

@@ -7,7 +7,6 @@ import CardUI from '../../UI/CardUI';
 import { CardFilterFields, FilterParams } from '../../types/enums';
 import { useSearchParams } from 'react-router-dom';
 import { filterTypeObj } from '../Filter/Filter';
-import BreadCrumbs from '../../UI/BreadCrumbs';
 import Pagination from '../Pagination';
 
 const LIMIT = 10;
@@ -58,7 +57,6 @@ export const CardList = () => {
 
   return (
     <div className={style.col}>
-      <BreadCrumbs />
       <Pagination
         blockPagination={!!searchParams.get(FilterParams.FILTER_TYPE)}
         setPageCallback={onPaginationCallback}
